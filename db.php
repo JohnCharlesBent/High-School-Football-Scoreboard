@@ -1,6 +1,6 @@
 <?php
 // remote db connection
-//$db = new mysqli('markets.lininteractive.com','admin_FBadmin', '#4aMm40j', 'admin_HSFootball');
+//$db = new mysqli('markets.lininteractive.com','user', 'pass', 'admin_HSFootball');
 
 //local connection (for testing)
 $db = new mysqli('localhost', 'root', 'root', 'admin_HSFB');
