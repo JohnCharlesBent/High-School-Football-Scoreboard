@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Graduate' rel='stylesheet' type='text/css'>
+<style>
+* {box-sizing:border-box;}
+body {margin:0;padding:0;font-family:'Open Sans';}
+ul {margin:0;padding:0;}
+a {color:inherit;text-decoration:none;}
+#wrap {width:100%;max-width:650px;}
+img.branding {width:100%;}
+.thisMatch {padding:.5em .2em;border-bottom:solid thin #ccc;padding:0;margin:0;}
+.hScore, .aScore {margin-left:15px;margin-right:15px;padding:.25em;text-align:right;font-family:'Graduate', cursive;}
+.winner {background:green;color:#fff;}
+.loser {background:red;color:#fff;}
+.nAn {background:none;color:#ccc;}
+.hT, .aT {font-family:'Graduate', cursive;}
+.hT {color:#30518E;}
+.aT {color:#5F5F5F;}
+#date, .divDate {font-size:1.2em;font-family:'Graduate', cursive;text-align:center;}
+.divDate {background:#eee;margin:.5em 0;}
+.thisMatch {padding:.5em .25em;}
+#home, #away {width:50%;display:inline-block;}
+#home {float:left;}
+#away {float:right;}
+.clr {clear:both;}
+#tabs {border-bottom:solid thin #30518E;}
+#filter {background:#A5C4EB;font-size:.9em;text-align:center;padding:.5em 0;margin:0;font-family:'Graduate', cursive;display:inline-block;width:50%;height:35px;vertical-align:top;float:left;}
+div#search {display:inline-block;width:49%;}
+.tab {display:inline-block;float:left;width:33.33%;text-align:center;font-size:.9em;background:#A5C4EB;border-right:solid thin #30518E;cursor:pointer;}
+.tab:hover {background:#30518E;color:#fff;}
+.tab:last-child {border-right:none;}
+.searchIcon {background:#30518E;padding:.25em;height:35px;}
+input[type="search"] {border-bottom:solid medium #30518E;height:35px;width:89%;border-top:none;border-left:none;border-right:none;vertical-align:top;padding:0 .25em;font-size:.9em;font-family:'Open-Sans', helvetica, arial, sans-serif;color:#30518e;}
+#weeks, #teams, #division {width:60%;margin:1em auto;display:block;border:solid thin #30518e;font-family:'Open-Sans', helvetica, arial;font-size:1em;border-radius:4px;}
+#currSeason {margin-bottom:.5em;text-align:left;}
+.curr {width:30%;padding:.5em;background:#30518e;text-align:center;font-family:'Graduate', cursive;color:#fff;vertical-align:top;height:35px;display:inline-block;}
+img.arrow {height:35px;vertical-align:top;}
+#season {display:inline-block;width:20%;color:#30518e;text-align:center;font-family:'Graduate', cursive;font-size:1.5em;vertical-align:middle;padding:.25em 0;}
+#terms {padding:0 .5em;border-bottom:solid thin #eee;}
+#val {font-size:1.5em;font-family:'Graduate', sans-serif;color:#30518e;display:inline-block;width:70%;}
+#submit{cursor:pointer;background:#a5c4eb;color:#30518e;padding:.5em;border-radius:4px;float:right;margin-bottom:.25em;display:none;}
+#submit:hover{padding:.4em;opacity:.7;vertical-align:top;}
+#results li.sRes {list-style:none;font-family:'Graduate', sans-serif;font-size:1.5em;color:#30518e;border-bottom:solid thin #ccc;padding:.25em;}
+li.sRes:nth-child(odd) {background:#a5c4eb;}
+#selSea {font-family:arial,helvetica, sans-serif;font-size:1em;padding:0;width:auto;}
+#location {font-size:.85em;}
+.timeDate {margin-left:10px;}
+.t, #divi {font-size:1.5em;display:block;text-align:center;font-family:'Graduate',sans-serif;background:#a5c4eb;color:#30518e;}
+#pairings #date {border-bottom:solid thin #a5c4eb;color:#30518e;}
+.previous {float:left;-webkit-border-bottom-right-radius: 4px;
+-moz-border-radius-bottomright: 4px;
+border-bottom-right-radius: 4px;}
+.next {float:right;-webkit-border-bottom-left-radius: 4px;
+-moz-border-radius-bottomleft: 4px;
+border-bottom-left-radius: 4px;}
+.previous, .next {cursor:pointer;font-size:1.2em;font-family:'Open-Sans', helvetica;color:#30518e;}
+.previous:hover, .next:hover {background:#a5c4eb;;}
+#date {border-bottom:solid thin #ccc;margin-bottom:.25em;}
+.wOp {margin-left:.25em;}
+#highlights {color:#754719;font-family:'Graduate',sans-serif;}
+.wePlay {color:#30518E;}
+#noGames h3 {text-align:center;font-family:'Graduate',sans-serif;color:#30518e;}
+@media screen and (max-width:600px) and (min-width:2px) {
+	body {font-size:90%;}
+	img.arrow {display:none;}
+	span.curr {font-family:'Open-Sans', sans-serif;background:none;color:#30518e;text-align:left;width:auto;}
+	#selSea {font-size:.9em;display:block;width:100%;text-align:center;}
+	#filter {display:block;width:100% !important;padding:0;height:auto;}
+	#search {display:block;width:100% !important;margin-bottom:.25em;}
+	input#search {display:inline-block;width:91% !important;border-bottom:solid thin #30518e;}
+	#location {text-align:center;border-top:solid thin #ccc;}
+	.timeDate {display:block;}
+	img.searchIcon {width:9%;height:auto;}
+	.hT, .aT {display:block;}
+	#highlights {text-align:center;}
+}
+</style>
+</head>
+
+<body>
+	<div id="wrap">
+<header>
+	<img src="img/EWNSports.jpg" class="branding" alt="EWN Sports Branding" />
+<div id="currSeason"><span class="curr">Selected Season:</span><img src="img/arrow.png" class="arrow" /><span id="season"></span><select id="selSea"><option selected disabled="disabled">Select another season</option>
+
+<option value="2017">2017</option>
+<option value="2016">2016</option>
+<option value="2015">2015</option>
+<option value="2014">2014</option>
+
+
+</select></div>
+<div id="search"><img src="img/mag_glass.png" alt="eyeglass icon" class="searchIcon"/><input type="search" value="Search Teams" id="search" /></div>
+<div id="filter">Display:</div>
+<div id="tabs"><span class="tab week">Week</span>
+	<span class="tab division">Division</span>
+	<span class="tab team">Team</span></div>
+
+
+
+
+
+<select id="weeks">
+<option selected disabled="disabled">Select a Week</option>
+</select>
+
+
+<select id="division"></select>
+
+
+<select id="teams">
+	<option selected disabled="disabled">Select a Team</option>
+</select>
+</header>
+
+<div id="s">
+	<div id="date"><span class="previous">&laquo;</span>Week:<span class="wOp"></span><span class="next">&raquo;</span></div>
+	<div id="divi"><span class="thisDiv"></span></div>
+	<div id="team"><span class="t"></span></div>
+	<div id="pairings"></div>
+
+</div>
+		<ul id="results"></ul>
+</div>
+
+<script src="moment.js"></script>
+<script>
+$(document).ready(function(){
+var now = moment();
+
+var weekNumber = moment().day("Tuesday").week();
+
+var day = moment().day();
+
+console.log(weekNumber);
+// get current date/week, pass to variable to pass to scoreboard
+
+var selWeek, weekPlay;
+
+console.log(weekNumber, day);
+
+function currWeek() {
+	if(weekNumber == 36 || weekNumber == 37 && day < 2) {
+		selWeek = '9.03 - 9.09';
+		weekPlay = 1;
+	} else if(weekNumber == 37 || weekNumber == 38 && day < 2) {
+		selWeek = '9.10 -  9.16';
+		weekPlay = 2;
+	} else if(weekNumber == 38 || weekNumber == 39 && day < 2) {
+		selWeek = '9.17 - 9.23';
+		weekPlay = 3;
+	} else if(weekNumber == 39 || weekNumber == 40 && day < 2) {
+		selWeek = '9.24 - 9.30';
+		weekPlay = 4;
+	} else if(weekNumber == 40 || weekNumber == 41 && day < 2) {
+		selWeek = '10.01 - 10.07';
+		weekPlay = 5;
+	} else if(weekNumber == 41 || weekNumber == 42 && day < 2) {
+		selWeek = '10.08 - 10.14';
+		weekPlay = 6;
+	} else if(weekNumber == 42 || weekNumber == 43 && day < 2) {
+		selWeek = '10.15 - 10.21';
+		weekPlay = 7;
+	} else if(weekNumber == 43 || weekNumber == 44 && day < 2) {
+		selWeek = '10.22 - 10.28';
+		weekPlay = 8;
+	} else if(weekNumber == 44 || weekNumber == 45 && day < 2) {
+		selWeek = '10.29 - 11.04';
+		weekPlay = 9;
+	} else if(weekNumber == 45 || weekNumber == 46 && day < 2) {
+		selWeek = '11.05 - 11.11';
+		weekPlay = 10;
+	} else if(weekNumber == 46 || weekNumber == 47 && day < 2) {
+		selWeek = '11.12 - 11.18';
+		weekPlay = 11;
+	} else if(weekNumber == 47 || weekNumber == 48 && day < 2) {
+		selWeek = '11.19 - 11.25';
+		weekPlay = 12;
+	} 
+	//console.log(selWeek);
+	//console.log(weekPlay);
+}
+
+// function to color code wins and losses on scoreboard
+
+function JSON_stringify(s, emit_unicode)
+{
+   var json = JSON.stringify(s);
+   return emit_unicode ? json : json.replace(/[\u007f-\uffff]/g,
+      function(c) { 
+        return '\\u'+('0000'+c.charCodeAt(0).toString(16)).slice(-4);
+      }
+   );
+}
+
+
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+file= $.urlParam('file');
+
+
+
+if(file == null) {
+	file = '2017';
+	$('#division').html('<option selected disabled="disabled">Select a Division</option><option value="I">I</option><option value="II">II</option><option value="III">III</option>');
+
+} else {
+	file = $.urlParam('file');
+	
+	$('#division').html('<option selected disabled="disabled">Select a Division</option><option value="I">I</option><option value="II-A">II-A</option><option value="II-B">II-B</option><option value="III">III</option><option value="IV">IV</option>');
+}
+
+if(file == '2017') {
+	$('#division').html('<option selected disabled="disabled">Select a Division</option><option value="I">I</option><option value="II">II</option><option value="III">III</option><option value="mass-football">Mass. Football</option>');
+}
+
+$('#season').text(file);
+
+$.fn.extend({
+
+	scores: function() {
+
+$('.thisMatch').each(function(){
+var homeS = $(this).find('.hScore').text();
+var awayS = $(this).find('.aScore').text();
+var high = $(this).find('.hi').attr('href');
+if(homeS == 'n/a') {
+	$(this).find('.hScore').hide();
+}
+if(awayS == 'n/a') {
+	$(this).find('.aScore').hide();
+}
+homeS = parseInt(homeS);
+awayS = parseInt(awayS);
+
+if(homeS > awayS) {
+	$(this).find('.hScore').addClass('winner');
+} else {
+	$(this).find('.hScore').addClass('loser');
+}
+if(awayS > homeS) {
+	$(this).find('.aScore').addClass('winner');
+} else {
+	$(this).find('.aScore').addClass('loser');
+}
+if(homeS == NaN) {
+	$(this).find('.hScore').addClass('nAn');
+} else {
+
+}
+if(awayS == NaN) {
+	$(this).find('.aScore').addClass('nAn');
+} else {
+	
+}
+$('.thisMatch:odd').css('background', '#D2E2F5');
+
+if(high == 'n/a') {
+	$(this).find('.hi').hide();
+}
+
+});
+
+
+
+}
+
+});
+// end scores function
+
+
+$('#weeks, #teams, #division,#terms').hide();
+
+$('input#search').click(function(){
+		$('#tabs').hide();
+		$('#s').fadeOut(200);
+		$('#results').fadeIn(200);
+		$('#filter').css('width', '15%');
+		$('#search').css('width', '80%');
+		$('input#search').css('width', '78%')
+		$('input#search').val('');
+		$('#filter').html('Options:');
+	});
+
+$('#filter').click(function(){
+		$('#tabs').slideDown(500);
+		$('#search').css('width', '50%');
+		$('#filter').css('width', '49%');
+		$('#terms').fadeOut(300);
+		$('#results').fadeOut(300);
+		$('#results').empty()
+		$('#s').fadeIn(300);
+		$('input#search').val('');
+		$('input#search').css('width', '89%');
+		$('#filter').html('Display:');
+	});
+
+	$('.week').click(function(){
+		$('#weeks').show().slideDown(500);
+		$('#teams, #division').hide();
+	});
+
+	$('.team').click(function() {
+		$('#teams').show().slideDown(500);
+		$('#weeks, #division').hide();
+	});
+
+	$('.division').click(function(){
+		$('#division').show().slideDown(500);
+		$('#weeks, #teams').hide();
+	});
+
+// Empty arrays to pass data to for dynamically populating drop down menus
+
+	var weekNos = [];
+	var divDates = [];
+	var teams = [];
+	var loadWeek = []
+
+$.getJSON("json/Games."+file+".json", function(json){
+// set up iterator for previous/next buttons
+console.log(json);
+
+if(file == '2015' ) {
+	weekPlay = 1;
+	selWeek = '8.30 - 9.05';
+	$('.previous').hide();
+} else if(file == '2014') {
+	weekPlay = 1;
+	selWeek = '8.31 - 9.06';
+} else if(file == '2016') {
+	weekPlay = 1;
+	selWeek = '8.21 - 8.27';
+}
+ else if(file == '2017') {
+currWeek();
+//$('.next').hide();
+}
+
+$('.wOp').text(selWeek);
+for(i=0;i<json.matchUp.length;i++) {
+	var dataWeek = json.matchUp[i].date.replace('\u0096', '-');
+	if(dataWeek == selWeek) {
+
+		$('#pairings').append($('<div>', {
+			html: '<div class="thisMatch"><div id="home"><span class="hT">Home:</span> '+json.matchUp[i].homeTeam+'<span class="hScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].homeScore+'</span></div><div id="away"><span class="aT">Away:</span> '+json.matchUp[i].awayTeam+'<span class="aScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].awayScore+'</span></div><div class="clr"></div><div id="location">Location: '+json.matchUp[i].location+' <span class="timeDate">Day: '+json.matchUp[i].gameDate+' Time: '+json.matchUp[i].gameTime+'</div><div id="highlights"><a href="'+json.matchUp[i].highlights+'" target="_top"  class="hi">View Game Highlights</a></div></div>',
+		}));
+		
+		}
+		
+	} 
+if($('.thisMatch').length == 0) {
+	$('#pairings').append($('<div>', {
+			html: '<h3>There are no games currently schduled for '+selWeek+'.</h3>',
+			id: 'noGames'
+		}));
+}
+
+$('#pairings').scores();
+
+if(file == '2014') {
+function switchWeek() {
+switch(weekPlay) {
+		case 1:
+		selWeek = '8.31 - 9.06';
+		break;
+		case 2:
+		selWeek = '9.07 - 9.13';
+		break;
+		case 3:
+		selWeek = '9.14 - 9.20';
+		break;
+		case 4:
+		selWeek = '9.21 - 9.27';
+		break;
+		case 5:
+		selWeek = '9.28 - 10.04';
+		break;
+		case 6:
+		selWeek = '10.05 - 10.11';
+		break;
+		case 7:
+		selWeek = '10.12 - 10.18';
+		break;
+		case 8:
+		selWeek = '10.19 - 10.25';
+		break;
+		case 9:
+		selWeek = '10.26 - 11.01';
+		break;
+		case 10:
+		selWeek = '11.02 - 11.08';
+		break;
+		case 11:
+		selWeek = '11.09 - 11.15';
+		break;
+		case 12:
+		selWeek = '11.16 - 11.22';
+		break;
+		case 13:
+		selWeek = '11.23 - 11.29';
+		break;
+}
+if(weekPlay == 13) {
+			$('.next').hide();
+		} else {
+			$('.next').show();
+		}
+if(weekPlay == 1) {
+	$('.previous').hide();
+} else {
+	$('.previous').show();
+}
+}
+} 
+
+if (file == '2015') {
+	function switchWeek() {
+switch(weekPlay) {
+		case 1:
+		selWeek = '8.30 - 9.05';
+		break;
+		case 2:
+		selWeek = '9.06 - 9.12';
+		break;
+		case 3:
+		selWeek = '9.13 - 9.19';
+		break;
+		case 4:
+		selWeek = '9.20 - 9.26';
+		break;
+		case 5:
+		selWeek = '9.27 - 10.03';
+		break;
+		case 6:
+		selWeek = '10.04 - 10.10';
+		break;
+		case 7:
+		selWeek = '10.11 - 10.17';
+		break;
+		case 8:
+		selWeek = '10.18 - 10.24';
+		break;
+		case 9:
+		selWeek = '10.25 - 10.31';
+		break;
+		case 10:
+		selWeek = '11.01 - 11.07';
+		break;
+		case 11:
+		selWeek = '11.08 - 11.14';
+		break;
+		case 12:
+		selWeek = '11.15 - 11.21';
+		break;
+		case 13:
+		selWeek = '11.22 - 11.28';
+		break;
+}
+if(weekPlay == 13) {
+			$('.next').hide();
+		} else {
+			$('.next').show();
+		}
+if(weekPlay == 1) {
+	$('.previous').hide();
+} else {
+	$('.previous').show();
+}
+}
+
+}
+
+if (file == '2016') {
+	function switchWeek() {
+switch(weekPlay) {
+		case 1:
+		selWeek = '8.21 - 8.27';
+		break;
+		case 2:
+		selWeek = '8.28 - 9.03';
+		break;
+		case 3:
+		selWeek = '9.04 - 9.10';
+		break;
+		case 4:
+		selWeek = '9.11 - 9.17';
+		break;
+		case 5:
+		selWeek = '9.18 - 9.24';
+		break;
+		case 6:
+		selWeek = '9.25 - 10.01';
+		break;
+		case 7:
+		selWeek = '10.02 - 10.08';
+		break;
+		case 8:
+		selWeek = '10.09 - 10.15';
+		break;
+		case 9:
+		selWeek = '10.16 - 10.22';
+		break;
+		case 10:
+		selWeek = '10.23 - 10.29';
+		break;
+		case 11:
+		selWeek = '10.30 - 11.05';
+		break;
+		case 12:
+		selWeek = '11.06 - 11.12';
+		break;
+		case 13:
+		selWeek = '11.13 - 11.19';
+		break;
+		case 14:
+		selWeek = '11.20 - 11.26';
+		break;
+}
+if(weekPlay == 14) {
+			$('.next').hide();
+		} else {
+			$('.next').show();
+		}
+if(weekPlay == 1) {
+	$('.previous').hide();
+} else {
+	$('.previous').show();
+}
+}
+
+}
+
+if (file == '2017') {
+	function switchWeek() {
+switch(weekPlay) {
+		case 1:
+		selWeek = '9.03 - 9.09';
+		break;
+		case 2:
+		selWeek = '9.10 -  9.16';
+		break;
+		case 3:
+		selWeek = '9.17 - 9.23';
+		break;
+		case 4:
+		selWeek = '9.24 - 9.30';
+		break;
+		case 5:
+		selWeek = '10.01 - 10.07';
+		break;
+		case 6:
+		selWeek = '10.08 - 10.14';
+		break;
+		case 7:
+		selWeek = '10.15 - 10.21';
+		break;
+		case 8:
+		selWeek = '10.22 - 10.28';
+		break;
+		case 9:
+		selWeek = '10.29 - 11.04';
+		break;
+		case 10:
+		selWeek = '11.05 - 11.11';
+		break;
+		case 11:
+		selWeek = '11.12 - 11.18';
+		break;
+		case 12:
+		selWeek = '11.19 - 11.25';
+		break;
+}
+if(weekPlay == 12) {
+			$('.next').hide();
+		} else {
+			$('.next').show();
+		}
+if(weekPlay == 1) {
+	$('.previous').hide();
+} else {
+	$('.previous').show();
+}
+}
+
+}
+
+$('.next').click(function(){
+	console.log(weekPlay);
+	$('#pairings').empty();
+	if(weekPlay == 12) {
+			$('.next').hide();
+		} else {
+			$('.next').show();
+		}
+		weekPlay++;
+		
+		switchWeek();
+		
+		$('.wOp').text(selWeek);
+for(i=0;i<json.matchUp.length;i++) {
+	var dataWeek = json.matchUp[i].date.replace('\u0096', '-');
+
+	if(dataWeek == selWeek ) {
+
+		
+		$('#pairings').append($('<div>', {
+			html: '<div class="thisMatch"><div id="home"><span class="hT">Home:</span> '+json.matchUp[i].homeTeam+'<span class="hScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].homeScore+'</span></div><div id="away"><span class="aT">Away:</span> '+json.matchUp[i].awayTeam+'<span class="aScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].awayScore+'</span></div><div class="clr"></div><div id="location">Location: '+json.matchUp[i].location+' <span class="timeDate">Day: '+json.matchUp[i].gameDate+' Time: '+json.matchUp[i].gameTime+'</div><div id="highlights"><a href="'+json.matchUp[i].highlights+'" target="_top" class="hi">View Game Highlights</a></div></div>',
+		}));
+
+
+		} 
+	} 
+
+if($('.thisMatch').length == 0) {
+	$('#pairings').append($('<div>', {
+			html: '<h3>There are no games currently schduled for '+selWeek+'.</h3>',
+			id: 'noGames'
+		}));
+}
+
+
+$('#pairings').scores();
+	});
+
+$('.previous').click(function(){
+	if(weekPlay == 0) {
+		weekPlay = 13;
+	}
+	$('#pairings').empty();
+	weekPlay--;
+	switchWeek();
+
+	$('.wOp').text(selWeek);
+for(i=0;i<json.matchUp.length;i++) {
+	var dataWeek = json.matchUp[i].date.replace('\u0096', '-');
+	if(dataWeek == selWeek) {
+		$('#pairings').append($('<div>', {
+			html: '<div class="thisMatch"><div id="home"><span class="hT">Home:</span> '+json.matchUp[i].homeTeam+'<span class="hScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].homeScore+'</span></div><div id="away"><span class="aT">Away:</span> '+json.matchUp[i].awayTeam+'<span class="aScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].awayScore+'</span></div><div class="clr"></div><div id="location">Location: '+json.matchUp[i].location+' <span class="timeDate">Day: '+json.matchUp[i].gameDate+' Time: '+json.matchUp[i].gameTime+'</div><div id="highlights"><a href="'+json.matchUp[i].highlights+'" target="_top" class="hi">View Game Highlights</a></div></div>',
+		}));
+
+	}
+	} 
+
+if($('.thisMatch').length == 0) {
+	$('#pairings').append($('<div>', {
+			html: '<h3>There are no games currently schduled for '+selWeek+'.</h3>',
+			id: 'noGames'
+		}));
+}
+
+$('#pairings').scores();
+});
+var week
+// push data do drop down menus
+for(i=0;i<json.matchUp.length;i++){
+	week = json.matchUp[i].date.replace('\u0096', '-');
+	//console.log(week);
+	weekNos.push(week);
+	teams.push(json.matchUp[i].homeTeam, json.matchUp[i].awayTeam);
+}
+
+unique = weekNos.filter(function(itm,f,a) {
+				return f==weekNos.indexOf(itm);
+			});
+
+uniqueTeams = teams.filter(function(itm,t,a) {
+	return t==teams.indexOf(itm);
+});
+
+orderedTeams = uniqueTeams.sort();
+ol = orderedTeams.length;
+
+
+for(tl=0;tl<ol;tl++){
+	$('#teams').append($('<option>', {
+		value: orderedTeams[tl],
+		text: orderedTeams[tl],
+	}));
+}
+
+// get the length of the unique array to iterate through and push to years dd
+var uni = unique.length;
+
+for(tw=0;tw<uni;tw++) {
+	$('#weeks').append($('<option>', {
+		text: unique[tw],
+		value: unique[tw],
+		id: tw
+	}));
+}
+
+// sort by week of play
+$('#weeks').change(function(){
+$('#date').show();
+$('.next, .previous').hide();
+$('#pairings, .wOp, #divi, .t').empty();
+var selWeek = $(this).val();
+var selId = $(this).attr('id');
+$('.wOp').text(''+selWeek+'');
+
+for(i=0;i<json.matchUp.length;i++) {
+	var dataWeek = json.matchUp[i].date.replace('\u0096', '-');
+	if(selWeek == dataWeek) {
+		$('#pairings').append($('<div>', {
+			html: '<div class="thisMatch"><div id="home"><span class="hT">Home:</span> '+json.matchUp[i].homeTeam+'<span class="hScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].homeScore+'</span></div><div id="away"><span class="aT">Away:</span> '+json.matchUp[i].awayTeam+'<span class="aScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].awayScore+'</span></div><div class="clr"></div><div id="location">Location: '+json.matchUp[i].location+' <span class="timeDate">Day: '+json.matchUp[i].gameDate+' Time: '+json.matchUp[i].gameTime+'</div><div id="highlights"><a href="'+json.matchUp[i].highlights+'" target="_top" class="hi">View Game Highlights</a></div></div>',
+		}));
+	} else {
+	}
+}
+$('#pairings').scores();
+});
+
+
+$('#division').change(function(){
+	$('.next, .previous, #date, #team').hide();
+	$('#pairings, .wOp').empty();
+	thisDiv = $(this).val();
+	$('#divi').text('Division: '+thisDiv);
+
+for(i=0;i<json.matchUp.length;i++) {
+	if(thisDiv == json.matchUp[i].homeDivision || thisDiv == json.matchUp[i].awayDivision) {
+		divDates.push(json.matchUp[i].date.replace('\u0096', '-'));
+}
+}
+
+unique = divDates.filter(function(itm,f,a) {
+return f==divDates.indexOf(itm);
+});
+console.log(unique);
+uni = unique.length;
+for(tw=0;tw<uni;tw++){
+// append a unique date value to #s to bucket division matchUps under
+$('#pairings').append($('<div>', {
+id: unique[tw],
+html: '<span class="wePlay">Week of Play: </span>'+unique[tw],
+'class': 'divDate'
+}));
+//set up iterator for games
+for(i=0;i<json.matchUp.length;i++) {
+	if(thisDiv == json.matchUp[i].homeDivision || thisDiv == json.matchUp[i].awayDivision) {
+		if(unique[tw] == json.matchUp[i].date.replace('\u0096', '-')) {
+$('#pairings').append($('<div>', {
+			html: '<div class="thisMatch" data-date="'+json.matchUp[i].date+'"><div id="home"><span class="hT">Home:</span> '+json.matchUp[i].homeTeam+'<span class="hScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].homeScore+'</span></div><div id="away"><span class="aT">Away:</span> '+json.matchUp[i].awayTeam+'<span class="aScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].awayScore+'</span></div><div class="clr"></div><div id="location">Location: '+json.matchUp[i].location+' <span class="timeDate">Day: '+json.matchUp[i].gameDate+' Time: '+json.matchUp[i].gameTime+'</div><div id="highlights"><a href="'+json.matchUp[i].highlights+'" target="_top" class="hi">View Game Highlights</a></div></div>',
+		}));
+					}
+				}
+		}
+	}
+
+$('#pairings').scores();
+
+});
+$('#teams').change(function(){
+$('#team').show();
+$('#date, .next, .previous').hide();
+$('#pairings, .wOp, #divi').empty();
+var thisTeam = $(this).val();
+$('.t').text(thisTeam);
+console.log(thisTeam);
+for(i=0;i<json.matchUp.length;i++) {
+	var dataDate = json.matchUp[i].date.replace('\u0096','-');
+	if(thisTeam == json.matchUp[i].homeTeam || thisTeam == json.matchUp[i].awayTeam) {
+
+		$('#pairings').append($('<div>', {
+			html: '<div id="date">'+dataDate+'</div><div class="thisMatch" data-date="'+json.matchUp[i].date+'"><div id="home"><span class="hT">Home:</span> '+json.matchUp[i].homeTeam+'<span class="hScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].homeScore+'</span></div><div id="away"><span class="aT">Away:</span> '+json.matchUp[i].awayTeam+'<span class="aScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].awayScore+'</span></div><div class="clr"></div><div id="location">Location: '+json.matchUp[i].location+' <span class="timeDate">Day: '+json.matchUp[i].gameDate+' Time: '+json.matchUp[i].gameTime+'</div><div id="highlights"><a href="'+json.matchUp[i].highlights+'" target="_top" class="hi">View Game Highlights</a></div></div>',
+		}));
+	}
+}
+
+$('#pairings').scores();
+});
+
+$('input#search').keyup(function(){
+	$('#results').empty();
+	$('#s').fadeOut(300);
+	var r;
+	var term = $('input#search').val();
+	var regex = new RegExp(term, 'i');
+	var count = 1;
+	uniqueTeams = teams.filter(function(itm,t,a) {
+	return t==teams.indexOf(itm);
+});
+	for(r=0;r<uniqueTeams.length;r++) {
+		if(uniqueTeams[r].search(regex) != -1) {
+			$('#results').append($('<li>', {
+				'class': 'sRes',
+				text: uniqueTeams[r],
+			}));
+		} 
+	}
+	
+});
+
+$('#results').on('click','li.sRes', function(){
+	thisTerm = $(this).text();
+	
+	$('#pairings, .wOp, #divi').empty();
+	$('#date').hide();
+	$('#team').show();
+	$('.t').text(thisTerm);
+for(i=0;i<json.matchUp.length;i++) {
+	if(thisTerm == json.matchUp[i].homeTeam || thisTerm == json.matchUp[i].awayTeam) {
+		var dataDate = json.matchUp[i].date.replace('\u0096','-');
+		$('#pairings').append($('<div>', {
+			html: '<div id="date">'+dataDate+'</div><div class="thisMatch" data-date="'+json.matchUp[i].date+'"><div id="home"><span class="hT">Home:</span> '+json.matchUp[i].homeTeam+'<span class="hScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].homeScore+'</span></div><div id="away"><span class="aT">Away:</span> '+json.matchUp[i].awayTeam+'<span class="aScore" data-score="'+json.matchUp[i].homeScore+'">'+json.matchUp[i].awayScore+'</span></div><div class="clr"></div><div id="location">Location: '+json.matchUp[i].location+' <span class="timeDate">Day: '+json.matchUp[i].gameDate+' Time: '+json.matchUp[i].gameTime+'</div><div id="highlights"><a href="'+json.matchUp[i].highlights+'" target="_top" class="hi">View Game Highlights</a></div></div>',
+		}));
+	}
+}
+$('#results').fadeOut(300);
+$('#s').fadeIn(300);
+$('#results').empty();
+
+$('#pairings').scores();
+});
+
+});
+// End getJson function
+
+$('#selSea').change(function(){
+	var year = $(this).val();
+var url = '';
+window.location.href= url+'?file='+year;
+});
+
+
+
+});
+</script>
+</body>
+</html>
